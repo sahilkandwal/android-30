@@ -3,23 +3,22 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      java: corretto17
-  pre_build:
+      java: corretto11
     commands:
-      # Update SDK tools
-      - echo "y" | sdkmanager --update
+      # Download the SDK Manager
+      - wget https://dl.google.com/android/repository/commandlinetools-linux-7302050_latest.zip -O sdk-tools.zip
+      - unzip sdk-tools.zip -d sdk-tools
+      - export ANDROID_SDK_ROOT=$PWD/sdk-tools
       # Install required SDK components
-      - echo "y" | sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30"
-      # Install dependencies using Gradle
-      - ./gradlew dependencies
-  build:
-    commands:
-      # Build the Android app
-      - ./gradlew assembleDebug
-  post_build:
-    commands:
-      # Copy the APK file to the build directory
-      - cp app/build/outputs/apk/debug/app-debug.apk $CODEBUILD_SRC_DIR/build/
+      - yes | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30"
+      # Accept SDK licenses
+      - yes | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --licenses
+
+build:
+  commands:
+    # Build the Android app using Gradle
+    - ./gradlew assembleDebug
+
 artifacts:
   files:
-    - build/app-debug.apk
+    - app/build/outputs/apk/debug/app-debug.apk
