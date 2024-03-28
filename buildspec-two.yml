@@ -1,0 +1,14 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      # Build Docker image from the Dockerfile in the repository
+      - docker build -t android-build-image .
+
+      # Run Gradle commands inside the Docker container
+      - docker run --rm -v $(pwd):/workspace android-build-image /bin/bash -c "./gradlew assembleDebug && ./gradlew assembleRelease"
+
+artifacts:
+  files:
+    - app/build/outputs/**/*.apk
