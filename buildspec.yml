@@ -4,14 +4,14 @@ phases:
   install:
     runtime-versions:
       java: corretto17
-  pre_build:
-    commands:
-      # Update SDK tools
-      - echo "y" | sdkmanager --update
-      # Install required SDK components
-      - echo "y" | sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30"
-      # Install dependencies using Gradle
-      - ./gradlew dependencies
+  # pre_build:
+  #   commands:
+  #     # Update SDK tools
+  #     - echo "y" | sdkmanager --update
+  #     # Install required SDK components
+  #     - echo "y" | sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30"
+  #     # Install dependencies using Gradle
+  #     - ./gradlew dependencies
   build:
     commands:
       # Build the Android app
